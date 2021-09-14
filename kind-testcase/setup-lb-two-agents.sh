@@ -45,7 +45,7 @@ kubectl delete service k8s-lw-proxy-test-proxy-svc-np
 echo Wait for all services to be up and running
 kubectl config use-context kind-lb-server-twoagents
 kubectl config set-context --current --namespace default
-kubectl get pods -A | grep -v Running
+kubectl get svc -A | grep pending
 while [ `kubectl get svc -A | grep pending | wc -l` -ne 0 ]
 do
     kubectl get svc -A | grep pending
