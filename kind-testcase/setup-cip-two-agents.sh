@@ -10,7 +10,6 @@ kind create cluster --name cip-twoagents-server
 
 echo Deploying Lacework agent on client
 kubectl config use-context kind-cip-twoagents-client
-kubectl delete namespace lacework
 kubectl create namespace lacework
 kubectl config set-context --current --namespace lacework
 cat lacework-cfg-k8s.yaml | sed "s/insertaccesstoken/$1/" | sed "s/insertkubernetesclusterhere/cip-twoagents-client/" | kubectl apply -f -
@@ -19,7 +18,6 @@ kubectl config set-context --current --namespace default
 
 echo Deploying Lacework agent on server
 kubectl config use-context kind-cip-twoagents-server
-kubectl delete namespace lacework
 kubectl create namespace lacework
 kubectl config set-context --current --namespace lacework
 cat lacework-cfg-k8s.yaml | sed "s/insertaccesstoken/$1/" | sed "s/insertkubernetesclusterhere/cip-twoagents-server/" | kubectl apply -f -

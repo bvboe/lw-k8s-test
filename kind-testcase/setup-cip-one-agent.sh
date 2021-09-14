@@ -10,7 +10,6 @@ kind create cluster --name cip-oneagent-server
 
 echo Deploying Lacework agent on server
 kubectl config use-context kind-cip-oneagent-server
-kubectl delete namespace lacework
 kubectl create namespace lacework
 kubectl config set-context --current --namespace lacework
 cat lacework-cfg-k8s.yaml | sed "s/insertaccesstoken/$1/" | sed "s/insertkubernetesclusterhere/cip-oneagent-server/" | kubectl apply -f -
