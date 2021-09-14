@@ -17,4 +17,5 @@ spec:
             - /bin/sh
             - -c
             - date; curl -s http://insertremoteaddress/128MB.html > /dev/null;echo Batch Done
+#            - date; curl -s http://insertremoteaddress/hello.html > /dev/null;echo Batch Done
           restartPolicy: Never
