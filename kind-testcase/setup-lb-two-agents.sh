@@ -12,7 +12,7 @@ echo Deploying Lacework agent on client
 kubectl config use-context kind-lb-twoagents-client
 kubectl create namespace lacework
 kubectl config set-context --current --namespace lacework
-cat lacework-cfg-k8s.yaml | sed "s/insertaccesstoken/$1/" | sed "s/insertkubernetesclusterhere/lb-twoagents-client/" | kubectl apply -f -
+cat lacework-cfg-k8s.yaml | sed "s/insertaccesstoken/$1/" | sed "s/insertkubernetesclusterhere/lb-twoagents/" | kubectl apply -f -
 kubectl apply -f lacework-k8s.yaml
 kubectl config set-context --current --namespace default
 
@@ -20,7 +20,7 @@ echo Deploying Lacework agent on server
 kubectl config use-context kind-lb-twoagents-server
 kubectl create namespace lacework
 kubectl config set-context --current --namespace lacework
-cat lacework-cfg-k8s.yaml | sed "s/insertaccesstoken/$1/" | sed "s/insertkubernetesclusterhere/lb-twoagents-server/" | kubectl apply -f -
+cat lacework-cfg-k8s.yaml | sed "s/insertaccesstoken/$1/" | sed "s/insertkubernetesclusterhere/lb-twoagents/" | kubectl apply -f -
 kubectl apply -f lacework-k8s.yaml
 kubectl config set-context --current --namespace default
 

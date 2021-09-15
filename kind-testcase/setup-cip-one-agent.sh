@@ -12,7 +12,7 @@ echo Deploying Lacework agent on server
 kubectl config use-context kind-cip-oneagent-server
 kubectl create namespace lacework
 kubectl config set-context --current --namespace lacework
-cat lacework-cfg-k8s.yaml | sed "s/insertaccesstoken/$1/" | sed "s/insertkubernetesclusterhere/cip-oneagent-server/" | kubectl apply -f -
+cat lacework-cfg-k8s.yaml | sed "s/insertaccesstoken/$1/" | sed "s/insertkubernetesclusterhere/cip-oneagent/" | kubectl apply -f -
 kubectl apply -f lacework-k8s.yaml
 kubectl config set-context --current --namespace default
 
