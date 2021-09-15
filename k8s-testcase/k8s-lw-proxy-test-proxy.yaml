@@ -1,0 +1,94 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: k8s-lw-proxy-test-proxy-svc-np
+  labels:
+    app: k8s-lw-proxy-test-proxy-app
+spec:
+  ports:
+  - port: 80
+    protocol: TCP
+    nodePort: 30000
+  selector:
+    app: k8s-lw-proxy-test-proxy-app
+  type: NodePort
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: k8s-lw-proxy-test-proxy-svc-cip
+  labels:
+    app: k8s-lw-proxy-test-proxy-app
+spec:
+  ports:
+  - port: 80
+    protocol: TCP
+    targetPort: 80
+  selector:
+    app: k8s-lw-proxy-test-proxy-app
+  type: ClusterIP
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: k8s-lw-proxy-test-proxy-svc-lb
+  labels:
+    app: k8s-lw-proxy-test-proxy-app
+spec:
+  ports:
+  - port: 80
+    protocol: TCP
+    targetPort: 80
+  selector:
+    app: k8s-lw-proxy-test-proxy-app
+  type: LoadBalancer
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: k8s-lw-proxy-test-proxy-app
+  name: k8s-lw-proxy-test-proxy-app
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: k8s-lw-proxy-test-proxy-app
+  template:
+    metadata:
+      labels:
+        app: k8s-lw-proxy-test-proxy-app
+    spec:
+      containers:
+      - image: nginx
+        name: nginx
+        ports:
+          - containerPort: 80
+        volumeMounts:
+          - mountPath: /etc/nginx/conf.d/default.conf
+            name: k8s-lw-proxy-test-proxy-app-conf
+            subPath: default.conf
+      volumes:
+        - name: k8s-lw-proxy-test-proxy-app-conf
+          configMap:
+            name: k8s-lw-proxy-test-proxy-app-conf-configmap
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: k8s-lw-proxy-test-proxy-app-conf-configmap
+data:
+  default.conf: |
+    server {
+        listen       80;
+        listen  [::]:80;
+        server_name  localhost;
+
+        location / {
+            proxy_pass  http://k8s-lw-proxy-test-server-svc-cip;
+        }
+        error_page   500 502 503 504  /50x.html;
+        location = /50x.html {
+            root   /usr/share/nginx/html;
+        }
+    }

@@ -1,0 +1,21 @@
+apiVersion: batch/v1beta1
+kind: CronJob
+metadata:
+  name: k8s-lw-proxy-test-client-app
+spec:
+#  schedule: "*/5 * * * *"
+  schedule: "*/1 * * * *"
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          containers:
+          - name: k8s-lw-proxy-test-client-app
+            image: curlimages/curl:latest
+            imagePullPolicy: IfNotPresent
+            args:
+            - /bin/sh
+            - -c
+            - date; curl -s http://insertremoteaddress/128MB.html > /dev/null;echo Batch Done
+#            - date; curl -s http://insertremoteaddress/hello.html > /dev/null;echo Batch Done
+          restartPolicy: Never

@@ -1,0 +1,119 @@
+#apiVersion: v1
+#kind: Service
+#metadata:
+#  name: multins-proxy-1-svc-np
+#  labels:
+#    app: multins-proxy-1-app
+#spec:
+#  ports:
+#  - port: 80
+#    protocol: TCP
+#  selector:
+#    app: multins-proxy-1-app
+#  type: NodePort
+#---
+apiVersion: v1
+kind: Service
+metadata:
+  name: k8s-lw-proxy-test-server-svc-cip
+  labels:
+    app: k8s-lw-proxy-test-server-app
+spec:
+  ports:
+  - port: 80
+    protocol: TCP
+    targetPort: 80
+  selector:
+    app: k8s-lw-proxy-test-server-app
+  type: ClusterIP
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: k8s-lw-proxy-test-server-svc-lb
+  labels:
+    app: k8s-lw-proxy-test-server-app
+spec:
+  ports:
+  - port: 80
+    protocol: TCP
+    targetPort: 80
+  selector:
+    app: k8s-lw-proxy-test-server-app
+  type: LoadBalancer
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: k8s-lw-proxy-test-server-app
+  name: k8s-lw-proxy-test-server-app
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: k8s-lw-proxy-test-server-app
+  template:
+    metadata:
+      labels:
+        app: k8s-lw-proxy-test-server-app
+    spec:
+      containers:
+      - image: httpd:latest
+        name: httpd
+        command: ["/bin/sh"]
+        args: ['-c', 'cp /init.sh /usr/local/apache2/htdocs/init.sh && chmod 755 /usr/local/apache2/htdocs/init.sh && /usr/local/apache2/htdocs/init.sh && httpd-foreground']
+        ports:
+          - containerPort: 80
+        volumeMounts:
+          - mountPath: /init.sh
+            name: k8s-lw-proxy-test-server-app-script
+            subPath: init.sh
+      volumes:
+        - name: k8s-lw-proxy-test-server-app-script
+          configMap:
+            name: k8s-lw-proxy-test-server-app-config
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: k8s-lw-proxy-test-server-app-config
+data:
+  init.sh: |
+    cd `dirname "$0"`
+    echo "<html><head><title>Test Data</title></head>" > index.html
+    echo "<body><h1>Test Data</h1><ul>" >> index.html
+    echo HelloWorld > hello.html
+    echo "<li><a href="hello.html">Hello</a></li>" >> index.html
+    date && echo 1B && cat /dev/urandom | tr -dc 'a-zA-Z0-9' | fold -w 1 | head -n 1 > 1B.html && echo "<li><a href="1B.html">1B</a></li>" >> index.html
+    date && echo 2B && cat /dev/urandom | tr -dc 'a-zA-Z0-9' | fold -w 2 | head -n 1 > 2B.html && echo "<li><a href="2B.html">2B</a></li>" >> index.html
+    date && echo 4B && cat /dev/urandom | tr -dc 'a-zA-Z0-9' | fold -w 4 | head -n 1 > 4B.html && echo "<li><a href="4B.html">4B</a></li>" >> index.html
+    date && echo 8B && cat /dev/urandom | tr -dc 'a-zA-Z0-9' | fold -w 8 | head -n 1 > 8B.html && echo "<li><a href="8B.html">8B</a></li>" >> index.html
+    date && echo 16B && cat /dev/urandom | tr -dc 'a-zA-Z0-9' | fold -w 16 | head -n 1 > 16B.html && echo "<li><a href="16B.html">16B</a></li>" >> index.html
+    date && echo 32B && cat /dev/urandom | tr -dc 'a-zA-Z0-9' | fold -w 32 | head -n 1 > 32B.html && echo "<li><a href="32B.html">32B</a></li>" >> index.html
+    date && echo 64B && cat /dev/urandom | tr -dc 'a-zA-Z0-9' | fold -w 64 | head -n 1 > 64B.html && echo "<li><a href="64B.html">64B</a></li>" >> index.html
+    date && echo 128B && cat /dev/urandom | tr -dc 'a-zA-Z0-9' | fold -w 128 | head -n 1 > 128B.html && echo "<li><a href="128B.html">128B</a></li>" >> index.html
+    date && echo 256B && cat /dev/urandom | tr -dc 'a-zA-Z0-9' | fold -w 256 | head -n 1 > 256B.html && echo "<li><a href="256B.html">256B</a></li>" >> index.html
+    date && echo 512B && cat /dev/urandom | tr -dc 'a-zA-Z0-9' | fold -w 512 | head -n 1 > 512B.html && echo "<li><a href="512B.html">512B</a></li>" >> index.html
+    date && echo 1kB && cat /dev/urandom | tr -dc 'a-zA-Z0-9' | fold -w 1024 | head -n 1 > 1kB.html && echo "<li><a href="1kB.html">1kB</a></li>" >> index.html
+    date && echo 2kB && cat /dev/urandom | tr -dc 'a-zA-Z0-9' | fold -w 2048 | head -n 1 > 2kB.html && echo "<li><a href="2kB.html">2kB</a></li>" >> index.html
+    date && echo 4kB && cat /dev/urandom | tr -dc 'a-zA-Z0-9' | fold -w 4096 | head -n 1 > 4kB.html && echo "<li><a href="4kB.html">4kB</a></li>" >> index.html
+    date && echo 8kB && cat /dev/urandom | tr -dc 'a-zA-Z0-9' | fold -w 8192 | head -n 1 > 8kB.html && echo "<li><a href="8kB.html">8kB</a></li>" >> index.html
+    date && echo 16kB && cat /dev/urandom | tr -dc 'a-zA-Z0-9' | fold -w 16384 | head -n 1 > 16kB.html && echo "<li><a href="16kB.html">16kB</a></li>" >> index.html
+    date && echo 32kB && cat /dev/urandom | tr -dc 'a-zA-Z0-9' | fold -w 32768 | head -n 1 > 32kB.html && echo "<li><a href="32kB.html">32kB</a></li>" >> index.html
+    date && echo 64kB && cat /dev/urandom | tr -dc 'a-zA-Z0-9' | fold -w 65536 | head -n 1 > 64kB.html && echo "<li><a href="64kB.html">64kB</a></li>" >> index.html
+    date && echo 128kB && cat /dev/urandom | tr -dc 'a-zA-Z0-9' | fold -w 131072 | head -n 1 > 128kB.html && echo "<li><a href="128kB.html">128kB</a></li>" >> index.html
+    date && echo 256kB && cat /dev/urandom | tr -dc 'a-zA-Z0-9' | fold -w 262144 | head -n 1 > 256kB.html && echo "<li><a href="256kB.html">256kB</a></li>" >> index.html
+    date && echo 512kB && cat /dev/urandom | tr -dc 'a-zA-Z0-9' | fold -w 524288 | head -n 1 > 512kB.html && echo "<li><a href="512kB.html">512kB</a></li>" >> index.html
+    date && echo 1MB && cat 512kB.html 512kB.html > 1MB.html && echo "<li><a href="1MB.html">1MB</a></li>" >> index.html
+    date && echo 2MB && cat 1MB.html 1MB.html > 2MB.html && echo "<li><a href="2MB.html">2MB</a></li>" >> index.html
+    date && echo 4MB && cat 2MB.html 2MB.html > 4MB.html && echo "<li><a href="4MB.html">4MB</a></li>" >> index.html
+    date && echo 8MB && cat 4MB.html 4MB.html > 8MB.html && echo "<li><a href="8MB.html">8MB</a></li>" >> index.html
+    date && echo 16MB && cat 8MB.html 8MB.html > 16MB.html && echo "<li><a href="16MB.html">16MB</a></li>" >> index.html
+    date && echo 32MB && cat 16MB.html 16MB.html > 32MB.html && echo "<li><a href="32MB.html">32MB</a></li>" >> index.html
+    date && echo 64MB && cat 32MB.html 32MB.html > 64MB.html && echo "<li><a href="64MB.html">64MB</a></li>" >> index.html
+    date && echo 128MB && cat 64MB.html 64MB.html > 128MB.html && echo "<li><a href="128MB.html">128MB</a></li>" >> index.html
+    #date && echo 256MB && cat 128MB.html 128MB.html > 256MB.html && echo "<li><a href="256MB.html">256MB</a></li>" >> index.html
+    #date && echo 512MB && cat 256MB.html 256MB.html > 512MB.html && echo "<li><a href="512MB.html">512MB</a></li>" >> index.html
+    #date && echo 1GB && cat 512MB.html 512MB.html > 1GB.html && echo "<li><a href="1GB.html">1GB</a></li>" >> index.html
+    echo "</ul></body></html>" >> index.html
