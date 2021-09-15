@@ -16,6 +16,7 @@ spec:
             args:
             - /bin/sh
             - -c
-            - date; curl -s http://insertremoteaddress/128MB.html > /dev/null;echo Batch Done
+            - date; for i in {1..5}; do curl -s http://insertremoteaddress/128MB.html > /dev/null; done ;echo Batch Done
+#            - date; curl -s http://insertremoteaddress/128MB.html > /dev/null;echo Batch Done
 #            - date; curl -s http://insertremoteaddress/hello.html > /dev/null;echo Batch Done
           restartPolicy: Never
