@@ -39,4 +39,4 @@ remoteAddress=$serverIP:30000
 echo Remote Address: $remoteAddress
 kubectl config use-context kind-cip-twoagents-client
 kubectl config set-context --current --namespace default
-cat k8s-lw-proxy-test-client.yaml | sed "s/insertremoteaddress/$remoteAddress/" | kubectl apply -f -
+cat k8s-lw-proxy-test-client.yaml | sed "s/k8s-lw-proxy-test-proxy-svc-cip/$remoteAddress/" | kubectl apply -f -

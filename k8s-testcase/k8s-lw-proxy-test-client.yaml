@@ -9,14 +9,36 @@ spec:
     spec:
       template:
         spec:
+          restartPolicy: Never
           containers:
           - name: k8s-lw-proxy-test-client-app
             image: curlimages/curl:latest
             imagePullPolicy: IfNotPresent
-            args:
-            - /bin/sh
-            - -c
-            - date; for i in {1..5}; do curl -s http://insertremoteaddress/128MB.html > /dev/null; done ;echo Batch Done
-#            - date; curl -s http://insertremoteaddress/128MB.html > /dev/null;echo Batch Done
-#            - date; curl -s http://insertremoteaddress/hello.html > /dev/null;echo Batch Done
-          restartPolicy: Never
+            command: ["/bin/sh"]
+            args: ['-c', 'cp /runtest.sh /tmp/runtest.sh && chmod 700 /tmp/runtest.sh && /tmp/runtest.sh']
+            volumeMounts:
+              - mountPath: /runtest.sh
+                name: k8s-lw-proxy-test-client-app-testscript
+                subPath: runtest.sh
+          volumes:
+            - name: k8s-lw-proxy-test-client-app-testscript
+              configMap:
+                name: k8s-lw-proxy-test-client-app-config
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: k8s-lw-proxy-test-client-app-config
+data:
+  runtest.sh: |
+    date
+    serverAddress=k8s-lw-proxy-test-proxy-svc-cip
+    echo Starting test with server http://$serverAddress/
+    echo Test Hello World
+    curl -s http://$serverAddress/hello.html
+    curl -s http://$serverAddress/128MB.html > /dev/null
+    curl -s http://$serverAddress/128MB.html > /dev/null
+    curl -s http://$serverAddress/128MB.html > /dev/null
+    curl -s http://$serverAddress/128MB.html > /dev/null
+    echo Done
+    date

@@ -48,4 +48,4 @@ serverIP=`kubectl get service k8s-lw-proxy-test-proxy-svc-lb -o jsonpath="{.stat
 echo Server IP: $serverIP
 kubectl config use-context kind-lb-oneagent-client
 kubectl config set-context --current --namespace default
-cat k8s-lw-proxy-test-client.yaml | sed "s/insertremoteaddress/$serverIP/" | kubectl apply -f -
+cat k8s-lw-proxy-test-client.yaml | sed "s/k8s-lw-proxy-test-proxy-svc-cip/$serverIP/" | kubectl apply -f -
