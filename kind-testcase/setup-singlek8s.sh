@@ -5,12 +5,12 @@ if [ "$#" -ne 1 ]; then
 fi
 
 echo Creating cluster
-kind create cluster --name singlek8s --config kind-config.yaml
+kind create cluster --name singlek8s
+#kind create cluster --name singlek8s --config kind-config.yaml
 
-echo Setup Calico
-kubectl config use-context kind-singlek8s
-kubectl create namespace lacework
-kubectl apply -f https://docs.projectcalico.org/manifests/calico.yaml
+#echo Setup Calico
+#kubectl config use-context kind-singlek8s
+#kubectl apply -f https://docs.projectcalico.org/manifests/calico.yaml
 
 echo Deploying Lacework agent on server
 kubectl config use-context kind-singlek8s
