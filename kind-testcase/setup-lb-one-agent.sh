@@ -5,14 +5,16 @@ if [ "$#" -ne 1 ]; then
 fi
 
 echo Creating clusters
-kind create cluster --name lb-oneagent-client --config kind-config.yaml
-kind create cluster --name lb-oneagent-server --config kind-config.yaml
+#kind create cluster --name lb-oneagent-client --config kind-config.yaml
+k#ind create cluster --name lb-oneagent-server --config kind-config.yaml
+kind create cluster --name lb-oneagent-client
+kind create cluster --name lb-oneagent-server
 
-echo Setup Calico
-kubectl config use-context kind-lb-oneagent-client
-kubectl apply -f https://docs.projectcalico.org/manifests/calico.yaml
-kubectl config use-context kind-lb-oneagent-server
-kubectl apply -f https://docs.projectcalico.org/manifests/calico.yaml
+#echo Setup Calico
+#kubectl config use-context kind-lb-oneagent-client
+#kubectl apply -f https://docs.projectcalico.org/manifests/calico.yaml
+#kubectl config use-context kind-lb-oneagent-server
+#kubectl apply -f https://docs.projectcalico.org/manifests/calico.yaml
 
 echo Deploying Lacework agent on server
 kubectl config use-context kind-lb-oneagent-server
