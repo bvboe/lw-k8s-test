@@ -17,7 +17,7 @@ kubectl config set-context --current --namespace default
 
 echo Deploy server apps
 cd ../k8s-testcase
-kubectl config use-context kind-singlek8s
+kubectl config use-context minikube
 kubectl config set-context --current --namespace default
 kubectl apply -f k8s-lw-proxy-test-server.yaml
 kubectl apply -f k8s-lw-proxy-test-proxy.yaml
