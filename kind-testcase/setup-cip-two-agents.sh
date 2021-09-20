@@ -5,10 +5,10 @@ if [ "$#" -ne 1 ]; then
 fi
 
 echo Creating clusters
-#kind create cluster --name cip-twoagents-client --config kind-config.yaml
-#kind create cluster --name cip-twoagents-server --config kind-config.yaml
-kind create cluster --name cip-twoagents-client
-kind create cluster --name cip-twoagents-server
+#kind create cluster --name cip-twoagents-client --config kind-config.yaml --image kindest/node:v1.20.7@sha256:cbeaf907fc78ac97ce7b625e4bf0de16e3ea725daf6b04f930bd14c67c671ff9
+#kind create cluster --name cip-twoagents-server --config kind-config.yaml --image kindest/node:v1.20.7@sha256:cbeaf907fc78ac97ce7b625e4bf0de16e3ea725daf6b04f930bd14c67c671ff9
+kind create cluster --name cip-twoagents-client --image kindest/node:v1.20.7@sha256:cbeaf907fc78ac97ce7b625e4bf0de16e3ea725daf6b04f930bd14c67c671ff9
+kind create cluster --name cip-twoagents-server --image kindest/node:v1.20.7@sha256:cbeaf907fc78ac97ce7b625e4bf0de16e3ea725daf6b04f930bd14c67c671ff9
 
 #echo Setup Calico
 #kubectl config use-context kind-cip-twoagents-client
