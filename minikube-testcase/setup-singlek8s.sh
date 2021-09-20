@@ -5,7 +5,7 @@ if [ "$#" -ne 1 ]; then
 fi
 
 echo Creating cluster
-minikube start
+minikube start --kubernetes-version=v1.20.7
 
 echo Deploying Lacework agent on server
 kubectl config use-context minikube
