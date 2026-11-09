@@ -59,7 +59,7 @@ spec:
         app: k8s-lw-proxy-test-proxy-app
     spec:
       containers:
-      - image: nginx
+      - image: cgr.dev/cloudnative.biz/nginx:latest
         name: nginx
         ports:
           - containerPort: 80
