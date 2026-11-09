@@ -1,0 +1,15 @@
+# Enable inline image suggestions on pull requests.
+enabled: false
+# Prefer FIPS over an otherwise-equivalent standard image.
+prefer_fips: true
+
+migrate:
+  # Set false to disable automatic and on-demand migration.
+  enabled: true
+  # Automatic migration interval; minimum 24 hours.
+  period: 24h
+  ignore:
+    # Repository-relative paths or basenames. ** is not recursive.
+    files: []
+    # Source image patterns, for example "redis:*".
+    images: []
